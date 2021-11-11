@@ -486,7 +486,7 @@ public class CustomProductAgent extends Agent {
 
     private void httpLog(String message) {
         try {
-            String logMessage = ">" + timestampLog() + " - " + message;
+            String logMessage = "[" + timestampLog() + "] " + message;
             HttpRequestUtil.httpCallback(logCallback, "log", logMessage);
         } catch (IOException ex) {
             Logger.getLogger(WebServices.class.getName()).log(Level.SEVERE, null, ex);
@@ -503,7 +503,7 @@ public class CustomProductAgent extends Agent {
 
     private String timestampLog() {
         LocalDateTime date = LocalDateTime.now();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm:ss");
         return date.format(dateFormatter);
     }
 }
