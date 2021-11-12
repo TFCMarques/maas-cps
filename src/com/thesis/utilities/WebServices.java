@@ -12,7 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.thesis.product.ProductAgent;
-import com.thesis.product.CustomProductAgent;
 
 import jade.core.Agent;
 import jade.wrapper.AgentController;
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class WebServices extends Agent {
+public class WebServices {
     private Agent myAgent;
     public HttpServer server;
 
@@ -31,10 +30,7 @@ public class WebServices extends Agent {
         this.myAgent = a;
         this.server = HttpServer.create(new InetSocketAddress(8081), 0);
         this.server.createContext("/test", new TestHandler());
-        this.server.createContext("/product/A", new LaunchProductA());
-        this.server.createContext("/product/B", new LaunchProductB());
-        this.server.createContext("/product/C", new LaunchProductC());
-        this.server.createContext("/product/custom", new LaunchCustomProduct());
+        this.server.createContext("/product", new LaunchProduct());
         server.setExecutor(null);
     }
 
@@ -65,82 +61,7 @@ public class WebServices extends Agent {
         }
     }
 
-    class LaunchProductA implements HttpHandler {
-        @Override
-        public void handle(HttpExchange t) throws IOException {
-            try {
-                InputStream body = t.getRequestBody();
-                JSONObject jsonBody = parseInputStream(body);
-
-                String runId = jsonBody.getString("runId");
-                String statusCallback = jsonBody.getString("statusCallback");
-                String logCallback = jsonBody.getString("logCallback");
-
-                launchProduct(runId, "A", statusCallback, logCallback);
-            } catch (StaleProxyException | JSONException ex) {
-                Logger.getLogger(WebServices.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            String response = "Launched product of type A";
-            t.getResponseHeaders().add("Access-Control-Allow-Origin","*");
-            t.sendResponseHeaders(200, response.length());
-            OutputStream os = t.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
-        }
-    }
-
-    class LaunchProductB implements HttpHandler {
-        @Override
-        public void handle(HttpExchange t) throws IOException {
-            try {
-                InputStream body = t.getRequestBody();
-                JSONObject jsonBody = parseInputStream(body);
-
-                String runId = jsonBody.getString("runId");
-                String statusCallback = jsonBody.getString("statusCallback");
-                String logCallback = jsonBody.getString("logCallback");
-
-                launchProduct(runId, "B", statusCallback, logCallback);
-            } catch (StaleProxyException ex) {
-                Logger.getLogger(WebServices.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            String response = "Launched product of type B";
-            t.getResponseHeaders().add("Access-Control-Allow-Origin","*");
-            t.sendResponseHeaders(200, response.length());
-            OutputStream os = t.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
-        }
-    }
-
-    class LaunchProductC implements HttpHandler {
-        @Override
-        public void handle(HttpExchange t) throws IOException {
-            try {
-                InputStream body = t.getRequestBody();
-                JSONObject jsonBody = parseInputStream(body);
-
-                String runId = jsonBody.getString("runId");
-                String statusCallback = jsonBody.getString("statusCallback");
-                String logCallback = jsonBody.getString("logCallback");
-
-                launchProduct(runId, "C", statusCallback, logCallback);
-            } catch (StaleProxyException ex) {
-                Logger.getLogger(WebServices.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            String response = "Launched product of type C";
-            t.getResponseHeaders().add("Access-Control-Allow-Origin","*");
-            t.sendResponseHeaders(200, response.length());
-            OutputStream os = t.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
-        }
-    }
-
-    class LaunchCustomProduct implements HttpHandler {
+    class LaunchProduct implements HttpHandler {
         @Override
         public void handle(HttpExchange t) throws IOException {
             InputStream body = t.getRequestBody();
@@ -159,7 +80,7 @@ public class WebServices extends Agent {
             }
 
             try {
-                launchCustomProduct(runId, executionPlan, statusCallback, logCallback);
+                launchProduct(runId, statusCallback, logCallback, executionPlan);
             } catch (StaleProxyException ex) {
                 Logger.getLogger(WebServices.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -173,17 +94,10 @@ public class WebServices extends Agent {
         }
     }
 
-    private void launchProduct(String runId, String productType, String statusCallback, String logCallback) throws StaleProxyException {
+    private void launchProduct(String productId, String statusCallback, String logCallback, ArrayList<String> executionPlan) throws StaleProxyException {
         ProductAgent newProduct = new ProductAgent();
-        newProduct.setArguments(new Object[]{runId, productType, statusCallback, logCallback});
-        AgentController agent = this.myAgent.getContainerController().acceptNewAgent(runId, newProduct);
-        agent.start();
-    }
-
-    private void launchCustomProduct(String runId, ArrayList<String> executionPlan, String statusCallback, String logCallback) throws StaleProxyException {
-        CustomProductAgent newProduct = new CustomProductAgent();
-        newProduct.setArguments(new Object[]{runId, executionPlan, statusCallback, logCallback});
-        AgentController agent = this.myAgent.getContainerController().acceptNewAgent(runId, newProduct);
+        newProduct.setArguments(new Object[]{productId, statusCallback, logCallback, executionPlan});
+        AgentController agent = this.myAgent.getContainerController().acceptNewAgent(productId, newProduct);
         agent.start();
     }
 

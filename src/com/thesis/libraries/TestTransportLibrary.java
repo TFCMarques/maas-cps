@@ -19,7 +19,7 @@ public class TestTransportLibrary implements ITransport {
 
     @Override
     public boolean executeMove(String origin, String destination, String productID) {
-        System.out.println("Performing transportation from " + origin + " to " + destination + ".");
+        // System.out.println("Performing transportation from " + origin + " to " + destination + ".");
         try {
             Thread.sleep(5000);
         } catch (InterruptedException ex) {

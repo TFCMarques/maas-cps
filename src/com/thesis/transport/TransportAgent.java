@@ -73,7 +73,7 @@ public class TransportAgent extends Agent {
 
         @Override
         protected ACLMessage handleRequest(ACLMessage request) throws NotUnderstoodException, RefuseException {
-            System.out.println("*** LOG: " + myAgent.getLocalName() + " received REQUEST from " + request.getSender().getLocalName());
+            //System.out.println("*** LOG: " + myAgent.getLocalName() + " received REQUEST from " + request.getSender().getLocalName());
 
             ACLMessage reply = request.createReply();
             if (available) {
@@ -84,10 +84,10 @@ public class TransportAgent extends Agent {
                 available = false;
 
                 reply.setPerformative(ACLMessage.AGREE);
-                System.out.println("*** LOG: " + myAgent.getLocalName() + " sent AGREE to " + request.getSender().getLocalName());
+                //System.out.println("*** LOG: " + myAgent.getLocalName() + " sent AGREE to " + request.getSender().getLocalName());
             } else {
                 reply.setPerformative(ACLMessage.REFUSE);
-                System.out.println("*** LOG: " + myAgent.getLocalName() + " sent REFUSE to " + request.getSender().getLocalName());
+                //System.out.println("*** LOG: " + myAgent.getLocalName() + " sent REFUSE to " + request.getSender().getLocalName());
             }
 
             return reply;
@@ -98,7 +98,7 @@ public class TransportAgent extends Agent {
             myLib.executeMove(source, destination, id);
             ACLMessage inform = request.createReply();
             inform.setPerformative(ACLMessage.INFORM);
-            System.out.println("*** LOG: " + myAgent.getLocalName() + " sent INFORM to " + request.getSender().getLocalName());
+            //System.out.println("*** LOG: " + myAgent.getLocalName() + " sent INFORM to " + request.getSender().getLocalName());
             available = true;
 
             return inform;
