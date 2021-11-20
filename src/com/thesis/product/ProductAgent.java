@@ -45,6 +45,7 @@ public class ProductAgent extends Agent {
         this.executionPlan = (ArrayList<String>) args[3];
 
         httpLog(this.productId + " requires: " + executionPlan);
+        httpStatus("Running");
 
         this.currentStep = 0;
         this.lastStep = executionPlan.size();
@@ -124,6 +125,7 @@ public class ProductAgent extends Agent {
             httpLog(myAgent.getLocalName() + " received INFORM from " + inform.getSender().getLocalName());
             if(currentStep == lastStep) {
                 httpLog(myAgent.getLocalName() + " finished production");
+                httpStatus("Finished");
             }
         }
     }
@@ -377,7 +379,7 @@ public class ProductAgent extends Agent {
         }
     }
 
-    private void httpStatus(String statusMessage, String statusCallback) {
+    private void httpStatus(String statusMessage) {
         if(!statusCallback.equals("")) {
             try {
                 HttpRequestUtil.httpCallback(statusCallback, "status", statusMessage);
