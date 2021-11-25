@@ -1,5 +1,6 @@
 package com.thesis.transport;
 
+import com.thesis.resource.ResourceAgent;
 import jade.core.Agent;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -31,14 +32,12 @@ public class TransportAgent extends Agent {
         this.id = (String) args[0];
         this.description = (String) args[1];
 
-        //Load hw lib
         try {
             String className = (String) args[2];
             Class cls = Class.forName(className);
             Object instance;
             instance = cls.newInstance();
             myLib = (ITransport) instance;
-            System.out.println(instance);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(TransportAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -49,14 +48,12 @@ public class TransportAgent extends Agent {
         this.associatedSkills = myLib.getSkills();
         System.out.println("Transport Deployed: " + this.id + " Executes: " + Arrays.toString(associatedSkills));
 
-        // TO DO: Register in DF
         try {
             DFInteraction.RegisterInDF(this, this.associatedSkills, Constants.DFSERVICE_RESOURCE);
         } catch (FIPAException e) {
             System.out.println("Error registering " + this.id + " in DF");
         }
 
-        // TO DO: Add responder behaviour/s
         this.addBehaviour(new REResponder(this, MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
     }
 
@@ -65,6 +62,7 @@ public class TransportAgent extends Agent {
         super.takeDown();
     }
 
+    // *************************** FIPA REQUEST ********************************
     private class REResponder extends AchieveREResponder {
 
         public REResponder(Agent a, MessageTemplate mt) {
@@ -73,8 +71,6 @@ public class TransportAgent extends Agent {
 
         @Override
         protected ACLMessage handleRequest(ACLMessage request) throws NotUnderstoodException, RefuseException {
-            //System.out.println("*** LOG: " + myAgent.getLocalName() + " received REQUEST from " + request.getSender().getLocalName());
-
             ACLMessage reply = request.createReply();
             if (available) {
                 StringTokenizer st = new StringTokenizer(request.getContent(), Constants.TOKEN);
@@ -84,10 +80,8 @@ public class TransportAgent extends Agent {
                 available = false;
 
                 reply.setPerformative(ACLMessage.AGREE);
-                //System.out.println("*** LOG: " + myAgent.getLocalName() + " sent AGREE to " + request.getSender().getLocalName());
             } else {
                 reply.setPerformative(ACLMessage.REFUSE);
-                //System.out.println("*** LOG: " + myAgent.getLocalName() + " sent REFUSE to " + request.getSender().getLocalName());
             }
 
             return reply;
@@ -98,7 +92,6 @@ public class TransportAgent extends Agent {
             myLib.executeMove(source, destination, id);
             ACLMessage inform = request.createReply();
             inform.setPerformative(ACLMessage.INFORM);
-            //System.out.println("*** LOG: " + myAgent.getLocalName() + " sent INFORM to " + request.getSender().getLocalName());
             available = true;
 
             return inform;

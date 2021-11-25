@@ -13,31 +13,30 @@ public class TestLibrary implements IResource {
     @Override
     public void init(Agent myAgent) {
         this.myAgent = myAgent;
-        System.out.println("Test library has been successfully initialized for agent: " + myAgent.getLocalName());
+        // System.out.println("Test library has been successfully initialized for agent: " + myAgent.getLocalName());
     }
 
     @Override
     public boolean executeSkill(String skillID) {
         try {
             switch (skillID) {
-                case Constants.SK_GLUE_TYPE_A: {
+                case Constants.SK_GLUE_TYPE_A:
+                case Constants.SK_CUT_SQUARE: {
                     Thread.sleep(2000);
                     return true;
                 }
-                case Constants.SK_GLUE_TYPE_B: {
+                case Constants.SK_GLUE_TYPE_B:
+                case Constants.SK_CUT_CIRCLE: {
                     Thread.sleep(3000);
                     return true;
                 }
-                case Constants.SK_GLUE_TYPE_C: {
-                    Thread.sleep(4000);
+                case Constants.SK_CUT_TRIANGLE: {
+                    Thread.sleep(1000);
                     return true;
-                }                
+                }
                 case Constants.SK_PICK_UP:
                 case Constants.SK_DROP:
                     Thread.sleep(1000);
-                    return true;
-                case Constants.SK_QUALITY_CHECK:
-                    Thread.sleep(2000);
                     return true;
             }
         } catch (InterruptedException ex) {
@@ -47,23 +46,20 @@ public class TestLibrary implements IResource {
     }
 
     @Override
-    public String[] getSkills() {
+    public String[] getSkills(String type) {
         String[] skills;
-        switch (myAgent.getLocalName()) {
-            case "GlueStation1":
+
+        switch (type) {
+            case "GlueStation":
                 skills = new String[2];
                 skills[0] = Constants.SK_GLUE_TYPE_A;
                 skills[1] = Constants.SK_GLUE_TYPE_B;
                 return skills;
-            case "GlueStation2":
-                skills = new String[2];
-                skills[0] = Constants.SK_GLUE_TYPE_A;
-                skills[1] = Constants.SK_GLUE_TYPE_C;
-                return skills;
-            case "QualityControlStation1":
-            case "QualityControlStation2":
-                skills = new String[1];
-                skills[0] = Constants.SK_QUALITY_CHECK;
+            case "CuttingStation":
+                skills = new String[3];
+                skills[0] = Constants.SK_CUT_TRIANGLE;
+                skills[1] = Constants.SK_CUT_SQUARE;
+                skills[2] = Constants.SK_CUT_CIRCLE;
                 return skills;
             case "Operator":
                 skills = new String[2];

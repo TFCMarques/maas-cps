@@ -9,6 +9,6 @@ import jade.core.Agent;
 
 public interface IResource {
     public void init(Agent myAgent); 
-    public String[] getSkills();
+    public String[] getSkills(String type);
     public boolean executeSkill(String skillID);
 }
