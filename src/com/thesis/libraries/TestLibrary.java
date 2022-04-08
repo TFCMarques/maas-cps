@@ -20,12 +20,11 @@ public class TestLibrary implements IResource {
     public boolean executeSkill(String skillID) {
         try {
             switch (skillID) {
-                case Constants.SK_GLUE_TYPE_A:
+                case Constants.SK_GLUE:
                 case Constants.SK_CUT_SQUARE: {
                     Thread.sleep(2000);
                     return true;
                 }
-                case Constants.SK_GLUE_TYPE_B:
                 case Constants.SK_CUT_CIRCLE: {
                     Thread.sleep(3000);
                     return true;
@@ -51,9 +50,8 @@ public class TestLibrary implements IResource {
 
         switch (type) {
             case "GlueStation":
-                skills = new String[2];
-                skills[0] = Constants.SK_GLUE_TYPE_A;
-                skills[1] = Constants.SK_GLUE_TYPE_B;
+                skills = new String[1];
+                skills[0] = Constants.SK_GLUE;
                 return skills;
             case "CuttingStation":
                 skills = new String[3];

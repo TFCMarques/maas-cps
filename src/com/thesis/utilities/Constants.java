@@ -13,14 +13,13 @@ public class Constants {
     public static final String ONTOLOGY_EXECUTE_SKILL = "ont_exec";
 
     //Skills
-    public static final String SK_GLUE_TYPE_A = "sk_glue_a";
-    public static final String SK_GLUE_TYPE_B = "sk_glue_b";
-    public static final String SK_CUT_TRIANGLE = "sk_cut_triangle";
-    public static final String SK_CUT_SQUARE = "sk_cut_square";
-    public static final String SK_CUT_CIRCLE = "sk_cut_circle";
-    public static final String SK_PICK_UP = "sk_pick";
-    public static final String SK_DROP = "sk_drop";
-    public static final String SK_MOVE = "sk_move";
+    public static final String SK_GLUE = "skGlue";
+    public static final String SK_CUT_TRIANGLE = "skCutTriangle";
+    public static final String SK_CUT_SQUARE = "skCutSquare";
+    public static final String SK_CUT_CIRCLE = "skCutCircle";
+    public static final String SK_PICK_UP = "skPick";
+    public static final String SK_DROP = "skDrop";
+    public static final String SK_MOVE = "skMove";
 
     //Token
     public static final String TOKEN = "#TOKEN#";

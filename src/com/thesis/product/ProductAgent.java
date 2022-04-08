@@ -57,7 +57,7 @@ public class ProductAgent extends Agent {
         SequentialBehaviour sb = new SequentialBehaviour();
         for (int i = 0; i < executionPlan.size(); i++) {
             sb.addSubBehaviour(new SearchResources(this));
-            sb.addSubBehaviour(new TransportToResource(this));
+            sb.addSubBehaviour(new ExecuteTransport(this));
             sb.addSubBehaviour(new ExecuteSkill(this));
             sb.addSubBehaviour(new FinishCurrentStep(this));
         }
@@ -250,7 +250,7 @@ public class ProductAgent extends Agent {
             DFAgentDescription[] transportAgents = null;
             try {
                 httpLog(myAgent.getLocalName() + " searching DF for transport agents");
-                transportAgents = DFInteraction.SearchInDFByName("sk_move", myAgent);
+                transportAgents = DFInteraction.SearchInDFByName("skMove", myAgent);
             } catch (FIPAException e) {
                 httpLog(myAgent.getLocalName() + " threw FIPAException searching DF for transport agents");
             }
@@ -278,11 +278,11 @@ public class ProductAgent extends Agent {
         }
     }
 
-    private class TransportToResource extends SimpleBehaviour {
+    private class ExecuteTransport extends SimpleBehaviour {
 
         private boolean finished;
 
-        public TransportToResource(Agent a) {
+        public ExecuteTransport(Agent a) {
             super(a);
             this.finished = false;
         }
@@ -339,7 +339,6 @@ public class ProductAgent extends Agent {
         }
     }
 
-    // **************************** WAIT SKILL *********************************
     private class FinishCurrentStep extends SimpleBehaviour {
 
         private boolean finished;
@@ -390,7 +389,7 @@ public class ProductAgent extends Agent {
 
     private String timestampLog() {
         LocalDateTime date = LocalDateTime.now();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm:ss");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm:ss:SSS");
         return date.format(dateFormatter);
     }
 }
